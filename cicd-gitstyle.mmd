@@ -1,0 +1,69 @@
+gitGraph
+    %% --- Establish Long Lived Topology Upward from Main ---
+    %% 1. Initialize on Main (Bottom Track)
+    commit id: "Prod Baseline"
+    
+    %% 2. Cut QA directly from Main (Middle Track)
+    branch qa
+    checkout qa
+    commit id: "QA Alignment"
+    
+    %% 3. Jump back to Main, then cut Dev directly from Main (Top Track)
+    checkout main
+    branch dev
+    checkout dev
+    commit id: "Dev Alignment"
+    
+    %% --- CI/CD Cycle: Standard Feature Release ---
+    branch feature/ticket-id-desc
+    checkout feature/ticket-id-desc
+    commit id: "code: develop inventory transformation"
+    commit id: "test: local notebook verification"
+    
+    %% Pull Request + CI to Dev
+    checkout dev
+    merge feature/ticket-id-desc id: "PR + CI checks passed (dev)"
+    commit id: "bundle deploy -t dev"
+    
+    %% Spacing out before the QA merge
+    commit id: " "
+    
+    %% Dev to QA Promo Loop
+    checkout qa
+    merge dev id: "PR + CI checks passed (qa)"
+    commit id: "bundle deploy -t qa"
+    
+    %% Spacing out before the Prod merge to avoid text collision
+    commit id: "  "
+    
+    %% QA to Main/Prod Promo Loop (Requires 2 Approvers)
+    checkout main
+    merge qa id: "PR + CI + 2 Approvers passed (main)"
+    commit id: "bundle deploy -t prod"
+    
+    %% Spacing out before the Hotfix branch cuts out
+    commit id: "   "
+    
+    %% --- CI/CD Cycle: Hotfix Stream ---
+    checkout main
+    branch hotfix/ticket-id-desc
+    checkout hotfix/ticket-id-desc
+    commit id: "fix: solve high priority production crash"
+    
+    %% Expedited Merge back to Main
+    checkout main
+    merge hotfix/ticket-id-desc id: "Expedited PR + DE Lead Approval"
+    commit id: "bundle deploy -t prod (hotfix)"
+    
+    %% Spacing out before back-merges start
+    commit id: "    "
+    
+    %% --- Automated Back-Merge Sync Sequence ---
+    checkout qa
+    merge main id: "back-merge same day (main -> qa)"
+    
+    %% Final spacing to isolate the last back-merge
+    commit id: "     "
+    
+    checkout dev
+    merge qa id: "back-merge (qa -> dev)"

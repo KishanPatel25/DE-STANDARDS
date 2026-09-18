@@ -1,0 +1,13 @@
+flowchart LR
+  SAP --> BIS[BIS Extraction]
+  CIO --> BIS
+  Excel[Raw Excel] --> BIS
+  API --> BIS
+  BIS --> RAW[(BIS prod_silver = our RAW)]
+  RAW -.nightly.-> BACKUP[(Nightly Backup - deep clone)]
+  RAW --> CHECK{Readiness Checklist}
+  CHECK -->|good shape| MV[DE Gold - DLT Materialized View on BIS silver]
+  CHECK -->|not good| SILVER[DE Silver - cleansed]
+  SILVER --> GOLD[DE Gold]
+  MV --> ANALYSTS[Analysts / Reporting]
+  GOLD --> ANALYSTS
