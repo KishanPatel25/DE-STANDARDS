@@ -1,0 +1,5 @@
+flowchart LR
+  PILOT[Pilot / Smoke Test - ~1 chain, ~3-8 views] --> WAVE1[Wave 1 - ~10-15 pipelines, ~20-40 views]
+  WAVE1 --> WAVE2[Wave 2 - ~30-40% of remaining]
+  WAVE2 --> WAVE3[Wave 3 - remainder + confirmed dormant]
+  WAVE3 -.if confirmed dead.-> RETIRE[Retired / Not Migrated - ~33 dormant to confirm]

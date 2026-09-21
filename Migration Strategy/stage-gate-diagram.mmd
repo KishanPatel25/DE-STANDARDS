@@ -1,0 +1,7 @@
+flowchart LR
+  CODE[1. Code Smoke Test - CI] --> DATA[2. Data Smoke Test - QA]
+  DATA --> PARALLEL[3. Parallel Run - Reconciliation]
+  PARALLEL --> UAT[4. UAT Sign-off]
+  UAT --> CUTOVER[5. Cutover]
+  CUTOVER --> PAUSE[Synapse Paused - rollback net]
+  UAT -.issue found - back to parallel run.-> PARALLEL

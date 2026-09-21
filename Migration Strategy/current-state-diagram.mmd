@@ -1,0 +1,6 @@
+flowchart LR
+  SAP[SAP GUI Export] --> DRIVE[Network Drive] --> AL[Auto Loader Job] --> BLOB[(Azure Storage)]
+  BLOB -->|~130 pipelines, ~97 active| SYN[Synapse Pipelines - Python transform]
+  SYN --> SILVER[(Silver Parquet Files)]
+  SILVER --> VIEWS[Views - OPENROWSET - ~208 views]
+  VIEWS --> ANALYSTS[Analysts]
