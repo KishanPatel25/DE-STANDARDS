@@ -1,10 +1,11 @@
 flowchart LR
-  FEAT[feature/ticket-id-desc] --> CI1[PR + CI checks] --> DEV[(dev branch)]
-  DEV -->|on merge| DDEV[bundle deploy -t dev]
-  DEV --> CI2[PR + CI checks] --> QA[(qa branch)]
-  QA -->|on merge| DQA[bundle deploy -t qa]
-  QA --> CI3[PR + CI checks - 2 approvers] --> MAIN[(main / prod branch)]
-  MAIN -->|on merge| DPROD[bundle deploy -t prod]
-  HOTFIX[hotfix/ticket-id-desc] --> CI4[Expedited PR - DE Lead approval] --> MAIN
-  MAIN -.back-merge same day.-> QA
-  QA -.back-merge.-> DEV
+  MAIN0[(main)] -->|branch| FEAT[feature/ticket-id_desc]
+  FEAT -->|dev work| DEV[bundle deploy -t dev]
+  DEV -->|dev done, push to QA| QA[bundle deploy -t qa]
+  QA -->|QA passed| PR[PR to main - approval Kishan / Chenna]
+  PR -->|approved| MAIN1[(main)]
+  MAIN1 -->|on merge| PROD[bundle deploy -t prod - service principal]
+  MAIN1 -.branch from main.-> HOT[hotfix/ticket-id_desc]
+  HOT --> HQA[bundle deploy -t qa - quick test]
+  HQA --> HPR[Expedited PR - approval Kishan / Chenna]
+  HPR --> MAIN1
